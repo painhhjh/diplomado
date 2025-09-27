@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m#s3z$y&!$q@w(5!f-b5*g-!z5v@d(y-v$o)m)f0i@n*o#5'
+SECRET_KEY = 'Messi el mejor jugador del mundo y de la historia 1234567890 !@#$%^&*()_+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Terceros
+    
+    # Aplicaciones de terceros
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    # Mis Apps
+
+    # Mis aplicaciones
     'usuarios',
     'doctores',
     'citas',
@@ -51,7 +53,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # CORS Middleware
+    'corsheaders.middleware.CorsMiddleware', # Middleware de CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,24 +89,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'citas_medicas_db',
-        'USER': 'postgres',
-        'PASSWORD': 'tu_password_aqui', # Reemplaza con tu contraseña
-        'HOST': 'localhost',
+        'USER': 'gestion_user',
+        'PASSWORD': 'LeoMessi10',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
-
-# Configuración de REST Framework para usar autenticación por Token
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-}
-
-# Configuración de CORS para permitir peticiones desde el frontend de React
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
 
 
 # Password validation
@@ -128,13 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-
-LANGUAGE_CODE = 'es-ve'
-
+LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'America/Caracas'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -147,3 +133,24 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
+# Configuración de email para recuperación de contraseña
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'medicascitas02@gmail.com'  
+EMAIL_HOST_PASSWORD = 'LeoMessi.10'      
+DEFAULT_FROM_EMAIL = 'Gestión de Citas <medicascitas02@gmail.com>'
+
+# Configuración de CORS para permitir la conexión del frontend
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", # Puerto estándar para desarrollo de React
+]
+
+# Configuración de Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication', # Autenticación por Token
+    ],
+}

@@ -16,6 +16,7 @@ class PerfilSerializer(serializers.ModelSerializer):
 
 class CrearUsuarioSerializer(serializers.ModelSerializer):
     rol = serializers.CharField(write_only=True)
+    especialidad = serializers.IntegerField(write_only=True, required=False)
     
     class Meta:
         model = User
@@ -24,6 +25,7 @@ class CrearUsuarioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         rol = validated_data.pop('rol')
+        especialidad_id = validated_data.pop('especialidad', None)
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -35,6 +37,9 @@ class CrearUsuarioSerializer(serializers.ModelSerializer):
         if rol == 'paciente':
             Paciente.objects.create(perfil=perfil)
         elif rol == 'doctor':
-            # La especialidad se asignará después desde el perfil del doctor
-            Doctor.objects.create(perfil=perfil)
+            from doctores.modelos import Especialidad
+            if not especialidad_id:
+                raise serializers.ValidationError({'especialidad': 'La especialidad es obligatoria para doctores.'})
+            especialidad = Especialidad.objects.get(id=especialidad_id)
+            Doctor.objects.create(perfil=perfil, especialidad=especialidad)
         return user

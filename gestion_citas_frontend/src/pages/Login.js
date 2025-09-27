@@ -1,37 +1,42 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ onLogin, navegar }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  // const [showRoleSelect, setShowRoleSelect] = useState(false); // Eliminado: no se usa
+  const navigate = useNavigate();
+  // const [userToken, setUserToken] = useState(''); // Eliminado: no se usa
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
       const response = await login(username, password);
       localStorage.setItem('token', response.data.token);
-      
-      // Aquí necesitarías otra llamada a la API para obtener el rol del usuario
-      // Por simplicidad, lo simulamos
-      console.log('Login exitoso, token:', response.data.token);
-
-      // Simulación: Determina el rol (en una app real, la API debería devolverlo)
-      // y llama a onLogin con el rol correcto.
-      // Por ahora, lo dejamos para que el usuario elija en la UI de App.js
-      alert('¡Inicio de sesión exitoso! (Simulado). Actualiza la página o implementa el enrutamiento.');
-      // onLogin('paciente'); // o 'doctor'
-      
+  // setUserToken(response.data.token); // Eliminado: no se usa
+      const rol = response.data.rol;
+      if (rol === 'paciente') {
+        navigate('/panel-paciente');
+      } else if (rol === 'doctor') {
+        navigate('/panel-doctor');
+      } else {
+        setError('No se pudo determinar el rol del usuario.');
+      }
+      if (onLogin) onLogin(rol);
     } catch (err) {
       setError('Error al iniciar sesión. Verifica tus credenciales.');
       console.error(err);
     }
   };
 
+  // Ya no se necesita la selección manual de rol
+
   return (
     <div>
-      <h2>Iniciar Sesión</h2>
+  <h2 style={{ color: 'white', textShadow: '1px 1px 4px #333' }}>Iniciar Sesión</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Usuario:</label>

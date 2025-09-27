@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 
-const RecuperarContrasena = () => {
+const RecuperarContrasena = ({ navegar }) => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +21,7 @@ const RecuperarContrasena = () => {
 
   return (
     <div>
-      <h2>Recuperar Contraseña</h2>
+  <h2 style={{ color: 'white', textShadow: '1px 1px 4px #333' }}>Recuperar Contraseña</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Correo electrónico:</label>
@@ -33,10 +33,44 @@ const RecuperarContrasena = () => {
           />
         </div>
         <br />
-        <button type="submit">Enviar instrucciones</button>
-        {success && <p style={{ color: 'green' }}>{success}</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button
+          type="submit"
+          style={{
+            background: '#1976d2',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '10px 20px',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            cursor: 'pointer',
+            marginTop: '10px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+          }}
+        >
+          Enviar instrucciones
+        </button>
       </form>
+      <button
+        style={{
+          background: '#43a047',
+          color: 'white',
+          border: 'none',
+          borderRadius: '6px',
+          padding: '10px 20px',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          cursor: 'pointer',
+          marginTop: '20px',
+          marginLeft: '0',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+        }}
+        onClick={() => navegar('login')}
+      >
+        Volver a iniciar sesión
+      </button>
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

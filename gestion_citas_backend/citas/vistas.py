@@ -5,6 +5,44 @@ from .serializadores import CitaSerializer, SolicitarCitaSerializer
 from algoritmo_priorizacion.algoritmo import calcular_prioridad, encontrar_mejor_horario
 
 class CitaViewSet(viewsets.ModelViewSet):
+    def update(self, request, *args, **kwargs):
+        """
+        Permite editar una cita:
+        - Paciente: solo puede editar el motivo_consulta.
+        - Doctor: puede editar todos los campos.
+        """
+        instance = self.get_object()
+        user = request.user
+        data = request.data.copy()
+        if hasattr(user, 'perfil'):
+            if user.perfil.rol == 'paciente' and instance.paciente == user.perfil.paciente:
+                # Solo puede editar el motivo
+                instance.motivo_consulta = data.get('motivo_consulta', instance.motivo_consulta)
+                instance.save()
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data)
+            elif user.perfil.rol == 'doctor' and instance.doctor == user.perfil.doctor:
+                # Puede editar todos los campos
+                serializer = self.get_serializer(instance, data=data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+                return Response(serializer.data)
+        return Response({'error': 'No tiene permisos para editar esta cita.'}, status=status.HTTP_403_FORBIDDEN)
+    def destroy(self, request, *args, **kwargs):
+        """
+        Permite a un paciente o doctor eliminar una cita si tiene permisos sobre ella.
+        """
+        instance = self.get_object()
+        user = request.user
+        # Solo el paciente dueño o el doctor asignado pueden eliminar
+        if hasattr(user, 'perfil'):
+            if user.perfil.rol == 'paciente' and instance.paciente == user.perfil.paciente:
+                instance.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            elif user.perfil.rol == 'doctor' and instance.doctor == user.perfil.doctor:
+                instance.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'error': 'No tiene permisos para eliminar esta cita.'}, status=status.HTTP_403_FORBIDDEN)
     queryset = Cita.objects.all().order_by('-puntuacion_prioridad', 'fecha_hora')
     serializer_class = CitaSerializer
     permission_classes = [permissions.IsAuthenticated]

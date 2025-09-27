@@ -63,4 +63,4 @@ gestion_citas_frontend/
 
 
 .
-└── script_creacion_db.sql      # Script de Creación de la Base de Datos
+└── backup.sql      # backup de la base de datos

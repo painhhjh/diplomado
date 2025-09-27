@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
-from .modelos import Doctor, Especialidad, HorarioDisponible
+from usuarios.modelos import Doctor
+from .modelos import Especialidad, HorarioDisponible
 from .serializadores import DoctorSerializer, EspecialidadSerializer, HorarioDisponibleSerializer
 
 # ViewSet para ver la lista de doctores y sus perfiles

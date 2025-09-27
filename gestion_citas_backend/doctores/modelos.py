@@ -1,5 +1,4 @@
 from django.db import models
-from usuarios.modelos import Doctor
 
 class Especialidad(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -8,7 +7,7 @@ class Especialidad(models.Model):
         return self.nombre
 
 class HorarioDisponible(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='horarios')
+    doctor = models.ForeignKey('usuarios.Doctor', on_delete=models.CASCADE, related_name='horarios')
     fecha = models.DateField()
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()

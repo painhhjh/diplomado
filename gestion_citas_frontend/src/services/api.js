@@ -1,4 +1,9 @@
+
 import axios from 'axios';
+
+export const editarCita = (id, datos) => {
+  return api.put(`/citas/${id}/`, datos);
+}
 
 const API_URL = 'http://127.0.0.1:8000/api'; // URL de tu backend Django
 
@@ -27,7 +32,7 @@ api.interceptors.request.use(
 // --- Funciones de Autenticación ---
 
 export const login = (username, password) => {
-  return api.post('/api-token-auth/', { username, password });
+  return api.post('/usuarios/login/', { username, password });
 };
 
 export const registrar = (userData) => {
@@ -48,8 +53,13 @@ export const solicitarCita = (citaData) => {
     return api.post('/citas/', citaData);
 }
 
+
 export const obtenerMisCitas = () => {
-    return api.get('/citas/');
+  return api.get('/citas/');
+}
+
+export const eliminarCita = (id) => {
+  return api.delete(`/citas/${id}/`);
 }
 
 export default api;
