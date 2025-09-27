@@ -77,7 +77,7 @@ const FormularioCita = ({ onCitaCreada, cita }) => {
             <option value="">Seleccione un doctor</option>
             {doctores.map((doc) => (
               <option key={doc.id} value={doc.id}>
-                Dr. {doc.perfil.usuario.first_name} {doc.perfil.usuario.last_name} ({doc.especialidad.nombre})
+                Dr. {doc.perfil.usuario.first_name} {doc.perfil.usuario.last_name} ({doc.especialidad ? doc.especialidad.nombre : "Sin especialidad"})
               </option>
             ))}
           </select>
