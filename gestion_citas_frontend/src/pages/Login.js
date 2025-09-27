@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, navegar }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -56,6 +56,15 @@ const Login = ({ onLogin }) => {
         <button type="submit">Ingresar</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
+      <br />
+      <div>
+        <button onClick={() => navegar('registro')}>
+          Registrar usuario
+        </button>
+        <button style={{ marginLeft: '10px' }} onClick={() => navegar('recuperar-contrasena')}>
+          Olvidé mi contraseña
+        </button>
+      </div>
     </div>
   );
 };

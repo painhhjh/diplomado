@@ -132,6 +132,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
+# Configuración de email para recuperación de contraseña
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'medicascitas02@gmail.com'  
+EMAIL_HOST_PASSWORD = 'LeoMessi.10'      
+DEFAULT_FROM_EMAIL = 'Gestión de Citas <medicascitas02@gmail.com>'
 
 # Configuración de CORS para permitir la conexión del frontend
 CORS_ALLOWED_ORIGINS = [
