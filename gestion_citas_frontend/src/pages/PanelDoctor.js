@@ -123,11 +123,28 @@ const PanelDoctor = () => {
     }
   };
 
+  // Calcular citas que ocurren en 3 días
+  const hoy = new Date();
+  const tresDiasDespues = new Date(hoy);
+  tresDiasDespues.setDate(hoy.getDate() + 3);
+  const citasRecordatorio = citas.filter(cita => {
+    const fechaCita = new Date(cita.fecha_hora);
+    return fechaCita.getFullYear() === tresDiasDespues.getFullYear() &&
+      fechaCita.getMonth() === tresDiasDespues.getMonth() &&
+      fechaCita.getDate() === tresDiasDespues.getDate();
+  });
+
   return (
     <div>
-  <h2 style={{ color: 'white', textShadow: '1px 1px 4px #333' }}>Panel del Doctor - Mi Agenda</h2>
+      <h2 style={{ color: 'white', textShadow: '1px 1px 4px #333' }}>Panel del Doctor - Mi Agenda</h2>
       {loading && <p>Cargando agenda...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {citasRecordatorio.length > 0 && (
+        <div style={{ background: '#fffbe6', border: '2px solid #ffd600', color: '#222', padding: '16px', borderRadius: '10px', marginBottom: '20px', fontWeight: 'bold', fontSize: '17px' }}>
+          <span role="img" aria-label="recordatorio">⏰</span> Tienes una cita médica en 3 días. ¡No olvides revisar tu agenda!
+        </div>
+      )}
 
       <div style={{ background: '#f5f5f5', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Cambiar Especialidad</h3>
