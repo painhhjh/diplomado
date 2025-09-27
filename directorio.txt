@@ -1,0 +1,64 @@
+gestion_citas_backend/
+│
+├── manage.py
+│
+├── gestion_citas/  (App de configuración principal)
+│   ├── __init__.py
+│   ├── settings.py           # Configuración del Proyecto
+│   ├── urls_raiz.py          # URLs Raíz
+│   └── wsgi.py
+│
+├── usuarios/  (App para Pacientes y Doctores)
+│   ├── __init__.py
+│   ├── modelos.py            # Modelos de Usuarios
+│   ├── serializadores.py     # Serializadores de Usuarios
+│   ├── vistas.py             # Vistas de Usuarios
+│   └── urls.py               # URLs de Usuarios
+│
+├── doctores/  (App para info específica de doctores)
+│   ├── __init__.py
+│   ├── modelos.py            # Modelos de Doctores
+│   ├── serializadores.py     # Serializadores de Doctores
+│   ├── vistas.py             # Vistas de Doctores
+│   └── urls.py               # URLs de Doctores
+│
+├── citas/  (App para la lógica de citas)
+│   ├── __init__.py
+│   ├── modelos.py            # Modelos de Citas
+│   ├── serializadores.py     # Serializadores de Citas
+│   ├── vistas.py             # Vistas de Citas
+│   └── urls.py               # URLs de Citas
+│
+└── algoritmo_priorizacion/  (Módulo para el algoritmo)
+    ├── __init__.py
+    └── algoritmo.py          # Algoritmo de Priorización
+
+
+
+gestion_citas_frontend/
+│
+├── public/
+│   └── index.html
+│
+├── src/
+│   │
+│   ├── components/  (Componentes reutilizables)
+│   │   └── FormularioCita.js   # Formulario para Solicitar Cita
+│   │
+│   ├── pages/  (Vistas principales de la aplicación)
+│   │   ├── Inicio.js           # Página de Inicio
+│   │   ├── Login.js            # Página de Login
+│   │   ├── PanelDoctor.js      # Panel del Doctor
+│   │   └── PanelPaciente.js    # Panel del Paciente
+│   │
+│   ├── services/  (Lógica para comunicarse con la API)
+│   │   └── api.js              # Servicio de API
+│   │
+│   ├── App.js                  # Componente Principal App
+│   └── index.js
+│
+└── package.json
+
+
+.
+└── script_creacion_db.sql      # Script de Creación de la Base de Datos
