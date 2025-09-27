@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { obtenerMisCitas, eliminarCita, editarCita, obtenerDoctores } from '../services/api';
+import { obtenerMisCitas, eliminarCita, editarCita, obtenerDoctores, obtenerEspecialidades } from '../services/api';
 
 const PanelDoctor = () => {
   const [citas, setCitas] = useState([]);
@@ -7,7 +7,37 @@ const PanelDoctor = () => {
   const [doctores, setDoctores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [especialidades, setEspecialidades] = useState([]);
+  const [especialidadActual, setEspecialidadActual] = useState(null);
+  const [nuevaEspecialidad, setNuevaEspecialidad] = useState('');
+  const [msgEspecialidad, setMsgEspecialidad] = useState('');
+  const [nuevaEspecialidadNombre, setNuevaEspecialidadNombre] = useState('');
+  const [msgNuevaEspecialidad, setMsgNuevaEspecialidad] = useState('');
 
+  const handleAgregarEspecialidad = async (e) => {
+    e.preventDefault();
+    setMsgNuevaEspecialidad('');
+    if (!nuevaEspecialidadNombre.trim()) return;
+    try {
+      // POST al backend para crear especialidad
+      await fetch('http://127.0.0.1:8000/api/doctores/especialidades/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ nombre: nuevaEspecialidadNombre })
+      });
+      setMsgNuevaEspecialidad('Especialidad añadida correctamente.');
+      setNuevaEspecialidadNombre('');
+      // Recargar especialidades
+      const res = await obtenerEspecialidades();
+      setEspecialidades(res.data);
+    } catch {
+      setMsgNuevaEspecialidad('Error al añadir la especialidad.');
+    }
+  };
+// Duplicado eliminado
   useEffect(() => {
     const cargarAgenda = async () => {
       try {
@@ -25,10 +55,34 @@ const PanelDoctor = () => {
       try {
         const response = await obtenerDoctores();
         setDoctores(response.data);
+        // Obtener especialidad actual del primer doctor (el propio)
+        if (response.data.length > 0) {
+          setEspecialidadActual(response.data[0].especialidad?.nombre || '');
+        }
       } catch {}
     };
     cargarDoctores();
+    const cargarEspecialidades = async () => {
+      try {
+        const res = await obtenerEspecialidades();
+        setEspecialidades(res.data);
+      } catch {}
+    };
+    cargarEspecialidades();
   }, []);
+  const handleCambioEspecialidad = async (e) => {
+    e.preventDefault();
+    setMsgEspecialidad('');
+    if (!nuevaEspecialidad) return;
+    try {
+      // PATCH al backend (deberás crear el endpoint en Django)
+      await editarCita(doctores[0].id, { especialidad: parseInt(nuevaEspecialidad) });
+      setEspecialidadActual(especialidades.find(es => es.id === parseInt(nuevaEspecialidad))?.nombre || '');
+      setMsgEspecialidad('Especialidad actualizada correctamente.');
+    } catch {
+      setMsgEspecialidad('Error al actualizar la especialidad.');
+    }
+  };
   const handleEliminar = async (id) => {
     if (window.confirm('¿Seguro que desea eliminar esta cita?')) {
       try {
@@ -74,6 +128,28 @@ const PanelDoctor = () => {
   <h2 style={{ color: 'white', textShadow: '1px 1px 4px #333' }}>Panel del Doctor - Mi Agenda</h2>
       {loading && <p>Cargando agenda...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <div style={{ background: '#f5f5f5', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>
+        <h3>Cambiar Especialidad</h3>
+        <p><strong>Especialidad actual:</strong> {especialidadActual || 'No asignada'}</p>
+        <form onSubmit={handleCambioEspecialidad}>
+          <select value={nuevaEspecialidad} onChange={e => setNuevaEspecialidad(e.target.value)} required>
+            <option value="">Seleccione nueva especialidad</option>
+            {especialidades.map(es => (
+              <option key={es.id} value={es.id}>{es.nombre}</option>
+            ))}
+          </select>
+          <button type="submit" style={{ marginLeft: '10px', background: '#1976d2', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 12px', cursor: 'pointer' }}>Actualizar</button>
+        </form>
+        {msgEspecialidad && <p style={{ color: msgEspecialidad.includes('Error') ? 'red' : 'green' }}>{msgEspecialidad}</p>}
+        <hr />
+        <h3>Añadir Nueva Especialidad</h3>
+        <form onSubmit={handleAgregarEspecialidad}>
+          <input type="text" value={nuevaEspecialidadNombre} onChange={e => setNuevaEspecialidadNombre(e.target.value)} placeholder="Nombre de la especialidad" required />
+          <button type="submit" style={{ marginLeft: '10px', background: '#43a047', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 12px', cursor: 'pointer' }}>Añadir</button>
+        </form>
+        {msgNuevaEspecialidad && <p style={{ color: msgNuevaEspecialidad.includes('Error') ? 'red' : 'green' }}>{msgNuevaEspecialidad}</p>}
+      </div>
       
       {editando ? (
         <form onSubmit={handleGuardar} style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', marginTop: '20px' }}>
@@ -152,6 +228,6 @@ const PanelDoctor = () => {
       )}
     </div>
   );
-};
+}
 
 export default PanelDoctor;

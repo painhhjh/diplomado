@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { registrar } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { registrar, obtenerEspecialidades } from '../services/api';
 
 const Registro = ({ navegar }) => {
   const [username, setUsername] = useState('');
@@ -8,13 +8,25 @@ const Registro = ({ navegar }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('paciente');
+  const [especialidad, setEspecialidad] = useState('');
+  const [especialidades, setEspecialidades] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    if (role === 'doctor') {
+      obtenerEspecialidades().then(res => setEspecialidades(res.data)).catch(() => setEspecialidades([]));
+    }
+  }, [role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    if (role === 'doctor' && !especialidad) {
+      setError('Debe seleccionar una especialidad.');
+      return;
+    }
     try {
       await registrar({
         username,
@@ -22,7 +34,8 @@ const Registro = ({ navegar }) => {
         first_name: firstName,
         last_name: lastName,
         email,
-        rol: role
+        rol: role,
+        especialidad: role === 'doctor' ? parseInt(especialidad) : undefined
       });
       setSuccess('Usuario registrado correctamente. ¡Ahora puedes iniciar sesión!');
       setUsername('');
@@ -31,6 +44,7 @@ const Registro = ({ navegar }) => {
       setFirstName('');
       setLastName('');
       setRole('paciente');
+      setEspecialidad('');
     } catch (err) {
       setError('Error al crear el usuario. Intenta nuevamente.');
       console.error(err);
@@ -104,6 +118,18 @@ const Registro = ({ navegar }) => {
           </select>
         </div>
         <br />
+        {role === 'doctor' && (
+          <div>
+            <label>Especialidad:</label>
+            <select value={especialidad} onChange={e => setEspecialidad(e.target.value)} required>
+              <option value="">Seleccione una especialidad</option>
+              {especialidades.map(es => (
+                <option key={es.id} value={es.id}>{es.nombre}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        {role === 'doctor' && <br />}
         <button
           type="submit"
           style={{

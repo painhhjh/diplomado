@@ -1,9 +1,4 @@
-
 import axios from 'axios';
-
-export const editarCita = (id, datos) => {
-  return api.put(`/citas/${id}/`, datos);
-}
 
 const API_URL = 'http://127.0.0.1:8000/api'; // URL de tu backend Django
 
@@ -46,6 +41,10 @@ export const obtenerDoctores = () => {
     return api.get('/doctores/perfiles/');
 }
 
+export const obtenerEspecialidades = () => {
+  return api.get('/doctores/especialidades/');
+}
+
 // --- Funciones de Citas ---
 
 export const solicitarCita = (citaData) => {
@@ -53,13 +52,16 @@ export const solicitarCita = (citaData) => {
     return api.post('/citas/', citaData);
 }
 
-
 export const obtenerMisCitas = () => {
   return api.get('/citas/');
 }
 
 export const eliminarCita = (id) => {
   return api.delete(`/citas/${id}/`);
+}
+
+export const editarCita = (id, datos) => {
+  return api.put(`/citas/${id}/`, datos);
 }
 
 export default api;
