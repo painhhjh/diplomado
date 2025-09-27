@@ -2,6 +2,8 @@ gestion_citas_backend/
 │
 ├── manage.py
 │
+├── settings.py               #configuraciones
+│
 ├── gestion_citas/  (App de configuración principal)
 │   ├── __init__.py
 │   ├── settings.py           # Configuración del Proyecto

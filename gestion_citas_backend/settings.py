@@ -88,9 +88,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'citas_medicas_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'USER': 'gestion_user',
+        'PASSWORD': 'LeoMessi10',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
